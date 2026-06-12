@@ -1,0 +1,6 @@
+{
+  "name": "Visualizador Kiosko de Imágenes",
+  "description": "Aplicación interactiva de kiosko para reproducir y administrar imágenes en bucle a pantalla completa con transiciones personalizables, controles de reproducción, atajos de teclado y administración de archivos mediante arrastrar y soltar.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
