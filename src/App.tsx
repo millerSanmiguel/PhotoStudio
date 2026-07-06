@@ -33,7 +33,9 @@ export default function App() {
     return DEFAULT_SETTINGS;
   });
 
-  const [isKioskActive, setIsKioskActive] = useState(false);
+  const [isKioskActive, setIsKioskActive] = useState(() => {
+    return new URLSearchParams(window.location.search).has('kiosk');
+  });
 
   // Sync state changes to local storage
   useEffect(() => {
@@ -68,11 +70,33 @@ export default function App() {
   };
 
   const handleStartKiosk = () => {
-    setIsKioskActive(true);
+    const kioskUrl = `${window.location.origin}${window.location.pathname}?kiosk=true`;
+    const kioskWindow = window.open(
+      kioskUrl,
+      '_blank',
+      `width=${window.screen.width},height=${window.screen.height},left=0,top=0,fullscreen=yes,menubar=no,status=no,toolbar=no,titlebar=no,location=no`
+    );
+    if (kioskWindow) {
+      kioskWindow.focus();
+    } else {
+      alert('El bloqueador de ventanas emergentes ha impedido abrir el kiosco. Por favor, permite las ventanas emergentes para este sitio.');
+    }
   };
 
   const handleExitKiosk = () => {
-    setIsKioskActive(false);
+    const isKioskModeFromUrl = new URLSearchParams(window.location.search).has('kiosk');
+    if (isKioskModeFromUrl) {
+      window.close();
+      // Fallback if window.close() is blocked
+      setTimeout(() => {
+        const url = new URL(window.location.href);
+        url.searchParams.delete('kiosk');
+        window.history.replaceState({}, '', url.pathname + url.search);
+        setIsKioskActive(false);
+      }, 100);
+    } else {
+      setIsKioskActive(false);
+    }
   };
 
   return (

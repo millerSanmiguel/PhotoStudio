@@ -165,6 +165,35 @@ export default function KioskPlayer({ images, settings, onExit }: KioskPlayerPro
     };
   }, []);
 
+  // Auto-enter fullscreen when kiosk mode starts (on mount / first user interaction)
+  useEffect(() => {
+    const requestFs = () => {
+      if (!document.fullscreenElement && playerRef.current) {
+        playerRef.current.requestFullscreen().catch(err => {
+          console.warn('Fullscreen request on mount failed, waiting for interaction:', err);
+        });
+      }
+    };
+
+    // Try immediately
+    requestFs();
+
+    // Also trigger on first interaction inside the player
+    const handleInteraction = () => {
+      requestFs();
+      window.removeEventListener('click', handleInteraction);
+      window.removeEventListener('keydown', handleInteraction);
+    };
+
+    window.addEventListener('click', handleInteraction);
+    window.addEventListener('keydown', handleInteraction);
+
+    return () => {
+      window.removeEventListener('click', handleInteraction);
+      window.removeEventListener('keydown', handleInteraction);
+    };
+  }, []);
+
   // Clear visual feedback key icons after a brief period
   useEffect(() => {
     if (feedback.icon) {
