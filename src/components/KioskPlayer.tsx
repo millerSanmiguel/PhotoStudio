@@ -19,6 +19,47 @@ interface KioskPlayerProps {
   onExit: () => void;
 }
 
+const getPositionClasses = (pos: string | undefined, defaultPos: string) => {
+  switch (pos || defaultPos) {
+    case 'top-left': return 'top-8 left-8 text-left';
+    case 'top-right': return 'top-8 right-8 text-right';
+    case 'bottom-left': return 'bottom-8 left-8 text-left';
+    case 'bottom-right': return 'bottom-8 right-8 text-right';
+    case 'hidden': return 'hidden';
+    default: return '';
+  }
+};
+
+const getFontFamilyClass = (family: string | undefined) => {
+  switch (family) {
+    case 'serif': return 'font-serif';
+    case 'mono': return 'font-mono';
+    case 'sans': return 'font-sans';
+    case 'display':
+    default: return 'font-display';
+  }
+};
+
+const getFontSizeClass = (size: string | undefined, isTitle: boolean) => {
+  if (isTitle) {
+    switch (size) {
+      case 'small': return 'text-xl sm:text-2xl font-bold';
+      case 'large': return 'text-4xl sm:text-5xl font-black';
+      case 'xlarge': return 'text-5xl sm:text-7xl font-black';
+      case 'medium':
+      default: return 'text-2xl sm:text-4xl font-black';
+    }
+  } else {
+    switch (size) {
+      case 'small': return 'text-lg sm:text-xl font-semibold';
+      case 'large': return 'text-2xl sm:text-4xl font-bold';
+      case 'xlarge': return 'text-3xl sm:text-5xl font-bold';
+      case 'medium':
+      default: return 'text-xl sm:text-3xl font-bold';
+    }
+  }
+};
+
 export default function KioskPlayer({ images, settings, onExit }: KioskPlayerProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(settings.autoPlay);
@@ -37,6 +78,12 @@ export default function KioskPlayer({ images, settings, onExit }: KioskPlayerPro
 
   // Active Image Instance
   const activeImage = images[currentIndex] || null;
+
+  useEffect(() => {
+    if (images.length > 0 && currentIndex >= images.length) {
+      setCurrentIndex(0);
+    }
+  }, [images.length, currentIndex]);
 
   // Handle image index transitions safely
   const nextImage = () => {
@@ -275,6 +322,14 @@ export default function KioskPlayer({ images, settings, onExit }: KioskPlayerPro
       style={{ zIndex: 9999 }}
       id="kiosk-fullscreen-player"
     >
+      <div 
+        className="relative origin-center overflow-hidden flex items-center justify-center"
+        style={
+          settings.orientation === 'vertical'
+            ? { width: '100vh', height: '100vw', transform: 'rotate(90deg)' }
+            : { width: '100%', height: '100%' }
+        }
+      >
       {/* Background canvas for transitions */}
       <div className="absolute inset-0 z-0 flex items-center justify-center select-none pointer-events-none">
         <AnimatePresence mode="popLayout" initial={false}>
@@ -374,37 +429,21 @@ export default function KioskPlayer({ images, settings, onExit }: KioskPlayerPro
         </div>
       </div>
 
-      {/* Modern Kiosk Status Card - Bottom Left */}
-      {settings.showInfoOverlay && activeImage && (
-        <div
-          className={`absolute bottom-6 left-6 bg-black/75 backdrop-blur-md border border-white/10 p-4.5 rounded-xl text-white max-w-sm z-30 transition-all duration-300 ${
-            isCursorVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-          }`}
-        >
-          <div className="flex items-center gap-2 mb-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span className="text-[10px] font-mono font-bold tracking-widest text-[#0e9f6e] uppercase">
-              KIOSKO ACTIVO
-            </span>
-            <span className="text-[10px] text-white/50 font-mono ml-auto flex items-center gap-1">
-              <Clock className="w-3 h-3" />
-              {settings.duration}s
-            </span>
-          </div>
+      {/* Dynamic Positioned Image Name */}
+      {activeImage && settings.namePosition !== 'hidden' && (
+        <div className={`absolute z-40 pointer-events-none max-w-[50%] ${getPositionClasses(settings.namePosition, 'bottom-left')}`}>
+          <h2 className={`${getFontSizeClass(settings.fontSize, false)} ${getFontFamilyClass(settings.fontFamily)} text-white drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)] line-clamp-1 break-words`}>
+            {activeImage.name}
+          </h2>
+        </div>
+      )}
 
-          <h2 className="text-base font-display font-medium text-white line-clamp-1">{activeImage.name}</h2>
-          <p className="text-xs text-white/60 font-mono mt-1 break-all line-clamp-1">
-            {activeImage.size ? `Fichero: ${activeImage.size}` : `Origen: Enlace Externo`}
-          </p>
-
-          <div className="mt-3.5 space-y-1.5">
-            {/* Visual Instruction Keys Help */}
-            <div className="flex items-center justify-between text-[10px] font-mono text-white/40">
-              <span>Espacio: Pausar</span>
-              <span>↔ Flechas: Navegar</span>
-              <span>Esc: Salir</span>
-            </div>
-          </div>
+      {/* Dynamic Positioned Group Title */}
+      {settings.groupTitle && settings.titlePosition !== 'hidden' && (
+        <div className={`absolute z-40 max-w-[50%] pointer-events-none ${getPositionClasses(settings.titlePosition, 'top-right')}`}>
+          <h1 className={`${getFontSizeClass(settings.fontSize, true)} ${getFontFamilyClass(settings.fontFamily)} text-white drop-shadow-[0_4px_8px_rgba(0,0,0,0.9)] break-words line-clamp-2`}>
+            {settings.groupTitle}
+          </h1>
         </div>
       )}
 
@@ -439,6 +478,7 @@ export default function KioskPlayer({ images, settings, onExit }: KioskPlayerPro
           </motion.div>
         )}
       </AnimatePresence>
+      </div>
     </div>
   );
 }

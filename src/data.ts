@@ -7,6 +7,12 @@ export const DEFAULT_SETTINGS: KioskSettings = {
   autoPlay: true,
   showInfoOverlay: true,
   fitMode: 'cover',
+  orientation: 'horizontal',
+  groupTitle: 'Mi Presentación',
+  titlePosition: 'top-right',
+  namePosition: 'bottom-left',
+  fontSize: 'medium',
+  fontFamily: 'display',
 };
 
 export const DEFAULT_IMAGES: KioskImage[] = [

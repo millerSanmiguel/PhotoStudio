@@ -40,7 +40,11 @@ export default function App() {
   // Sync state changes to local storage
   useEffect(() => {
     try {
-      localStorage.setItem(IMAGES_STORAGE_KEY, JSON.stringify(images));
+      const current = localStorage.getItem(IMAGES_STORAGE_KEY);
+      const next = JSON.stringify(images);
+      if (current !== next) {
+        localStorage.setItem(IMAGES_STORAGE_KEY, next);
+      }
     } catch (e) {
       console.warn('Error writing images to localStorage:', e);
     }
@@ -48,11 +52,37 @@ export default function App() {
 
   useEffect(() => {
     try {
-      localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings));
+      const current = localStorage.getItem(SETTINGS_STORAGE_KEY);
+      const next = JSON.stringify(settings);
+      if (current !== next) {
+        localStorage.setItem(SETTINGS_STORAGE_KEY, next);
+      }
     } catch (e) {
       console.warn('Error writing settings to localStorage:', e);
     }
   }, [settings]);
+
+  // Listen for changes from other windows/tabs
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === IMAGES_STORAGE_KEY && e.newValue) {
+        try {
+          setImages(JSON.parse(e.newValue));
+        } catch (err) {
+          console.warn('Error parsing images from storage event', err);
+        }
+      }
+      if (e.key === SETTINGS_STORAGE_KEY && e.newValue) {
+        try {
+          setSettings(JSON.parse(e.newValue));
+        } catch (err) {
+          console.warn('Error parsing settings from storage event', err);
+        }
+      }
+    };
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
 
   const handleResetToDefaults = () => {
     if (window.confirm('¿Estás seguro de que deseas restablecer la lista de imágenes y los ajustes a los valores iniciales?')) {

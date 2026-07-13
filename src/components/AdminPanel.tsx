@@ -285,6 +285,36 @@ export default function AdminPanel({
                 </div>
               </div>
 
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+                  Orientación
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setSettings(prev => ({ ...prev, orientation: 'horizontal' }))}
+                    className={`py-1.5 rounded-lg text-xs font-medium cursor-pointer border ${
+                      (!settings.orientation || settings.orientation === 'horizontal')
+                        ? 'bg-indigo-50 border-indigo-200 text-indigo-700'
+                        : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'
+                    }`}
+                  >
+                    Horizontal
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSettings(prev => ({ ...prev, orientation: 'vertical' }))}
+                    className={`py-1.5 rounded-lg text-xs font-medium cursor-pointer border ${
+                      settings.orientation === 'vertical'
+                        ? 'bg-indigo-50 border-indigo-200 text-indigo-700'
+                        : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'
+                    }`}
+                  >
+                    Vertical
+                  </button>
+                </div>
+              </div>
+
               <div className="pt-2 border-t border-gray-100 space-y-3">
                 <label className="flex items-center gap-2.5 cursor-pointer select-none">
                   <input
@@ -343,6 +373,96 @@ export default function AdminPanel({
         {/* RIGHT COLUMN: FILE MANAGER */}
         <div className="lg:col-span-2 space-y-6">
           
+          {/* Text Configuration Block */}
+          <div className="bg-white border border-gray-200/80 rounded-xl p-5 shadow-sm">
+            <h2 className="text-lg font-display font-medium text-gray-900 mb-4 border-b border-gray-100 pb-2">
+              Configuración de Textos en Pantalla
+            </h2>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-800 mb-1.5">
+                  Título de la Presentación
+                </label>
+                <input
+                  type="text"
+                  value={settings.groupTitle || ''}
+                  onChange={(e) => setSettings(prev => ({ ...prev, groupTitle: e.target.value }))}
+                  placeholder="Ej: Cumpleaños 2026, Evento Principal..."
+                  className="w-full bg-white border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
+                    Posición del Título
+                  </label>
+                  <select
+                    value={settings.titlePosition || 'top-right'}
+                    onChange={(e) => setSettings(prev => ({ ...prev, titlePosition: e.target.value as any }))}
+                    className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
+                  >
+                    <option value="top-left">Arriba a la Izquierda</option>
+                    <option value="top-right">Arriba a la Derecha</option>
+                    <option value="bottom-left">Abajo a la Izquierda</option>
+                    <option value="bottom-right">Abajo a la Derecha</option>
+                    <option value="hidden">Oculto</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
+                    Posición del Nombre de Foto
+                  </label>
+                  <select
+                    value={settings.namePosition || 'bottom-left'}
+                    onChange={(e) => setSettings(prev => ({ ...prev, namePosition: e.target.value as any }))}
+                    className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
+                  >
+                    <option value="top-left">Arriba a la Izquierda</option>
+                    <option value="top-right">Arriba a la Derecha</option>
+                    <option value="bottom-left">Abajo a la Izquierda</option>
+                    <option value="bottom-right">Abajo a la Derecha</option>
+                    <option value="hidden">Oculto</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
+                    Tamaño de Fuente
+                  </label>
+                  <select
+                    value={settings.fontSize || 'medium'}
+                    onChange={(e) => setSettings(prev => ({ ...prev, fontSize: e.target.value as any }))}
+                    className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
+                  >
+                    <option value="small">Pequeño</option>
+                    <option value="medium">Mediano</option>
+                    <option value="large">Grande</option>
+                    <option value="xlarge">Extra Grande</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
+                    Estilo de Fuente
+                  </label>
+                  <select
+                    value={settings.fontFamily || 'display'}
+                    onChange={(e) => setSettings(prev => ({ ...prev, fontFamily: e.target.value as any }))}
+                    className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
+                  >
+                    <option value="sans">Elegante (Sans)</option>
+                    <option value="serif">Clásica (Serif)</option>
+                    <option value="mono">Técnica (Monoespaciada)</option>
+                    <option value="display">Impactante (Display/Bold)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* File Upload / Source Selection */}
           <div className="bg-white border border-gray-200/80 rounded-xl p-5 shadow-xs">
             <div className="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
