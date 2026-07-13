@@ -156,31 +156,38 @@ export default function AdminPanel({
           </p>
         </div>
         
-        <div className="flex items-center gap-3">
-          <button
-            onClick={onResetToDefaults}
-            className="flex items-center gap-2 bg-white text-gray-600 hover:text-gray-800 border border-gray-200 hover:border-gray-300 px-5 py-2.5 rounded-lg text-sm font-medium transition-all shadow-xs cursor-pointer"
-            title="Restablecer todos los ajustes e imágenes iniciales"
-            id="btn-reset-defaults"
-          >
-            <RefreshCw className="w-4 h-4" />
-            Restablecer
-          </button>
-          
-          <button
-            onClick={onStartKiosk}
-            disabled={images.length === 0}
-            className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-semibold transition-all shadow-sm cursor-pointer ${
-              images.length === 0
-                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                : 'bg-indigo-600 hover:bg-indigo-700 text-white hover:scale-[1.02] active:scale-[0.98]'
-            }`}
-            title="Reproducir visualizador a pantalla completa"
-            id="btn-launch-kiosk"
-          >
-            <Play className="w-4 h-4 fill-white" />
-            F11 Iniciar Kiosko
-          </button>
+        <div className="flex items-center gap-6">
+          {/* Logo - Ampliado y a un lado visible */}
+          <div className="w-24 h-24 sm:w-32 sm:h-32 bg-white rounded-xl border border-gray-200 shadow-md overflow-hidden flex items-center justify-center p-2 shrink-0">
+            <img src="/LogoPhos.jpeg" alt="Logo PhotoStudio" className="w-full h-full object-contain" />
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <button
+              onClick={onResetToDefaults}
+              className="flex items-center justify-center gap-2 bg-white text-gray-600 hover:text-gray-800 border border-gray-200 hover:border-gray-300 px-5 py-2.5 rounded-lg text-sm font-medium transition-all shadow-xs cursor-pointer"
+              title="Restablecer todos los ajustes e imágenes iniciales"
+              id="btn-reset-defaults"
+            >
+              <RefreshCw className="w-4 h-4" />
+              Restablecer
+            </button>
+            
+            <button
+              onClick={onStartKiosk}
+              disabled={images.length === 0}
+              className={`flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg text-sm font-semibold transition-all shadow-sm cursor-pointer ${
+                images.length === 0
+                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  : 'bg-indigo-600 hover:bg-indigo-700 text-white hover:scale-[1.02] active:scale-[0.98]'
+              }`}
+              title="Reproducir visualizador a pantalla completa"
+              id="btn-launch-kiosk"
+            >
+              <Play className="w-4 h-4 fill-white" />
+              F11 Iniciar Kiosko
+            </button>
+          </div>
         </div>
       </div>
 
@@ -407,6 +414,8 @@ export default function AdminPanel({
                     <option value="top-right">Arriba a la Derecha</option>
                     <option value="bottom-left">Abajo a la Izquierda</option>
                     <option value="bottom-right">Abajo a la Derecha</option>
+                    <option value="top-center">Centro Arriba</option>
+                    <option value="bottom-center">Centro Abajo</option>
                     <option value="hidden">Oculto</option>
                   </select>
                 </div>
@@ -424,6 +433,27 @@ export default function AdminPanel({
                     <option value="top-right">Arriba a la Derecha</option>
                     <option value="bottom-left">Abajo a la Izquierda</option>
                     <option value="bottom-right">Abajo a la Derecha</option>
+                    <option value="top-center">Centro Arriba</option>
+                    <option value="bottom-center">Centro Abajo</option>
+                    <option value="hidden">Oculto</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
+                    Posición del Logo (Marca de Agua)
+                  </label>
+                  <select
+                    value={settings.logoPosition || 'bottom-right'}
+                    onChange={(e) => setSettings(prev => ({ ...prev, logoPosition: e.target.value as any }))}
+                    className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
+                  >
+                    <option value="top-left">Arriba a la Izquierda</option>
+                    <option value="top-right">Arriba a la Derecha</option>
+                    <option value="bottom-left">Abajo a la Izquierda</option>
+                    <option value="bottom-right">Abajo a la Derecha</option>
+                    <option value="top-center">Centro Arriba</option>
+                    <option value="bottom-center">Centro Abajo</option>
                     <option value="hidden">Oculto</option>
                   </select>
                 </div>

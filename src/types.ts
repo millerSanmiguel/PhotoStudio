@@ -8,7 +8,7 @@ export interface KioskImage {
   addedAt: number;
 }
 
-export type TextPosition = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'hidden';
+export type TextPosition = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'top-center' | 'bottom-center' | 'hidden';
 export type FontSize = 'small' | 'medium' | 'large' | 'xlarge';
 export type FontFamily = 'sans' | 'serif' | 'mono' | 'display';
 
@@ -23,6 +23,7 @@ export interface KioskSettings {
   groupTitle?: string;
   titlePosition?: TextPosition;
   namePosition?: TextPosition;
+  logoPosition?: TextPosition;
   fontSize?: FontSize;
   fontFamily?: FontFamily;
 }

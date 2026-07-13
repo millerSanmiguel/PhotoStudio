@@ -11,6 +11,7 @@ export const DEFAULT_SETTINGS: KioskSettings = {
   groupTitle: 'Mi Presentación',
   titlePosition: 'top-right',
   namePosition: 'bottom-left',
+  logoPosition: 'bottom-right',
   fontSize: 'medium',
   fontFamily: 'display',
 };

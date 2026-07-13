@@ -25,6 +25,8 @@ const getPositionClasses = (pos: string | undefined, defaultPos: string) => {
     case 'top-right': return 'top-8 right-8 text-right';
     case 'bottom-left': return 'bottom-8 left-8 text-left';
     case 'bottom-right': return 'bottom-8 right-8 text-right';
+    case 'top-center': return 'top-8 left-1/2 -translate-x-1/2 text-center';
+    case 'bottom-center': return 'bottom-8 left-1/2 -translate-x-1/2 text-center';
     case 'hidden': return 'hidden';
     default: return '';
   }
@@ -354,6 +356,20 @@ export default function KioskPlayer({ images, settings, onExit }: KioskPlayerPro
             />
           </motion.div>
         </AnimatePresence>
+
+        {/* Text Watermark Overlay (Barely visible to protect photos) */}
+        <div className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center overflow-hidden">
+          <div className="text-white/20 opacity-30 font-display font-black text-5xl sm:text-7xl md:text-9xl lg:text-[10rem] select-none -rotate-12 drop-shadow-lg whitespace-nowrap">
+            PHÓS! Photography
+          </div>
+        </div>
+
+        {/* Dynamic Watermark Logo Overlay */}
+        {settings.logoPosition !== 'hidden' && (
+          <div className={`pointer-events-none absolute z-30 opacity-40 mix-blend-screen transition-all duration-500 ${getPositionClasses(settings.logoPosition, 'bottom-right')}`}>
+            <img src="/LogoPhos.jpeg" alt="Watermark Logo" className="w-24 h-24 sm:w-32 sm:h-32 md:w-48 md:h-48 object-contain drop-shadow-xl" />
+          </div>
+        )}
       </div>
 
       {/* Floating control buttons bar (Auto hides on inactive mouse) */}
